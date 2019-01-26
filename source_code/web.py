@@ -89,7 +89,7 @@ def advanced_access():
             home_dir_create(username,modify_value)
             return  "homedir changed"
         elif select_value == "sudo_access":
-            cmd = "gpasswd -d " + username " wheel"
+            cmd = "gpasswd -d " + username  + " wheel"
 
         # os.system("sudo usermod -a -G sudo " +username)
         # return redirect(url_for('index'))
