@@ -1,5 +1,4 @@
 from flask import Flask, render_template, redirect, request, url_for
-import os
 import subprocess
 import crypt
 import random
@@ -42,16 +41,15 @@ def add_user():
             username = request.form['user']
             password = request.form['password']
             crypted_password = crypt_password(password)
-            print crypted_password
             shell = request.form['shell']
             sudo_access = request.form['sudo']
             home_dir = request.form['home']
             if sudo_access == "yes":
                 cmd = "adduser -d " +  home_dir +  " -p " + crypted_password  + " -s " + shell + " -G wheel "+ username
-                cmd_output = subprocess.check_output(cmd, shell=True)
+                command_exec(cmd)
             else:
                 cmd = "adduser -d " +  home_dir +  " -p " + crypted_password  + " -s " + shell + " " + username
-                cmd_output = subprocess.check_output(cmd, shell=True)
+                command_exec(cmd)
             return "user successfully created."
     except:
         return "Something went wrong user not created!!!!!"
@@ -64,8 +62,8 @@ def delete_user():
         if request.method == 'POST':
             username = request.form['user']
             cmd = "userdel " + username
-            check_output = subprocess.check_output(cmd, shell=True)
-            return "user deleted successfully"
+            command_exec(cmd)
+            return "user successfully deleted"
     except:
         return "Something went wrong user not deleted!!!!!"
     return render_template('delete.html')
@@ -79,11 +77,11 @@ def modify_user():
             modify_value = request.form["modify"]
             if select_value == "password":
                 cmd = 'echo ' + modify_value  + ' | passwd --stdin ' + username
-                check_output = subprocess.check_output(cmd, shell=True)
+                command_exec(cmd)
                 return  "password changed"
             elif select_value == "shell":
                 cmd = "usermod -s " + modify_value + " " + username
-                check_output = subprocess.check_output(cmd, shell=True)
+                command_exec(cmd)
                 return  "shell changed"
 
             elif select_value == "homedir":
@@ -91,6 +89,7 @@ def modify_user():
                 return  "homedir changed"
             elif select_value == "sudo_access":
                 cmd = "gpasswd -d " + username  + " wheel"
+                command_exec(cmd)
                 return "sudo access revoked"
     except:
         return "Something went wrong while modifying user!!!!!"
