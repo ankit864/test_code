@@ -65,8 +65,9 @@ def advanced_access():
         select_value = request.form["selectedopt"]
         modify_value = request.form["modify"]
         if select_value == "password":
-            print 'echo ' + modify_value  + '| passwd --stdin ' + username
-        print select_value
+            cmd = 'echo ' + modify_value  + ' | passwd --stdin ' + username
+            check_output = subprocess.check_output(cmd, shell=True)
+            print  "password changed"
         # os.system("sudo usermod -a -G sudo " +username)
         return redirect(url_for('index'))
 
