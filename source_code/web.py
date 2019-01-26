@@ -48,11 +48,14 @@ def add_user():
 
 @app.route('/delete', methods=['GET', 'POST'])
 def delete_user():
-    if request.method == 'POST':
-        username = request.form['user']
-        cmd = "userdel" + username
-        check_output = subprocess.check_output(cmd, shell=True)
-        return "user deleted successfully"
+    try:
+        if request.method == 'POST':
+            username = request.form['user']
+            cmd = "userdel " + username
+            check_output = subprocess.check_output(cmd, shell=True)
+            return "user deleted successfully"
+    except:
+        return "Something went wrong user not deleted!!!!!"
     return render_template('delete.html')
 
 @app.route('/modify', methods=['GET', 'POST'])
