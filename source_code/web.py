@@ -71,30 +71,29 @@ def delete_user():
     return render_template('delete.html')
 
 @app.route('/modify', methods=['GET', 'POST'])
-def advanced_access():
-    if request.method == 'POST':
-        username = request.form['user']
-        select_value = request.form["selectedopt"]
-        modify_value = request.form["modify"]
-        if select_value == "password":
-            cmd = 'echo ' + modify_value  + ' | passwd --stdin ' + username
-            check_output = subprocess.check_output(cmd, shell=True)
-            return  "password changed"
-        elif select_value == "shell":
-            cmd = "usermod -s " + modify_value + " " + username
-            check_output = subprocess.check_output(cmd, shell=True)
-            return  "shell changed"
+def modify_user():
+    try:
+        if request.method == 'POST':
+            username = request.form['user']
+            select_value = request.form["selectedopt"]
+            modify_value = request.form["modify"]
+            if select_value == "password":
+                cmd = 'echo ' + modify_value  + ' | passwd --stdin ' + username
+                check_output = subprocess.check_output(cmd, shell=True)
+                return  "password changed"
+            elif select_value == "shell":
+                cmd = "usermod -s " + modify_value + " " + username
+                check_output = subprocess.check_output(cmd, shell=True)
+                return  "shell changed"
 
-        elif select_value == "homedir":
-            home_dir_create(username,modify_value)
-            return  "homedir changed"
-        elif select_value == "sudo_access":
-            cmd = "gpasswd -d " + username  + " wheel"
-
-        # os.system("sudo usermod -a -G sudo " +username)
-        # return redirect(url_for('index'))
-
-
+            elif select_value == "homedir":
+                home_dir_create(username,modify_value)
+                return  "homedir changed"
+            elif select_value == "sudo_access":
+                cmd = "gpasswd -d " + username  + " wheel"
+                return "sudo access revoked"
+    except:
+        return "Something went wrong while modifying user!!!!!"
     return render_template('modify.html')
 
 
