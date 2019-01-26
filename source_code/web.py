@@ -38,7 +38,7 @@ def add_user():
                 cmd = "adduser -d " +  home_dir +  " -p " + crypted_password  + " -s " + shell + " -G wheel "+ username
                 cmd_output = subprocess.check_output(cmd, shell=True)
             else:
-                cmd "adduser -d " +  home_dir +  " -p " + crypted_password  + " -s " + shell + " " + username
+                cmd = "adduser -d " +  home_dir +  " -p " + crypted_password  + " -s " + shell + " " + username
                 cmd_output = subprocess.check_output(cmd, shell=True)
             return "user successfully created."
     except:
