@@ -23,7 +23,7 @@ def crypt_password(password):
     return crypted_password
 
 def home_dir_create(username,home_dir):
-    create_dir  = "mkdir " + home_dir
+    create_dir  = "mkdir -p " + home_dir
     command_exec(create_dir)
     copy_skel = "cp -rT /etc/skel " + home_dir
     command_exec(copy_skel)
