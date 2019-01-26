@@ -1,7 +1,22 @@
 from flask import Flask, render_template, redirect, request, url_for
 import os
 import subprocess
+import crypt
+import random
+import string
+
 app = Flask(__name__)
+
+def random_string_generator(str_size):
+    return ''.join(random.choice(string.ascii_letters) for x in range(str_size))
+
+
+def crypt_password(password):
+    salt_string = random_string_generator(16)
+    print salt_string
+    # print salt_string.len()
+    crypted_password = crypt.crypt(password,salt_string)
+    return crypted_password
 
 @app.route('/')
 def index():
@@ -10,22 +25,27 @@ def index():
 
 @app.route('/adduser', methods=['GET', 'POST'])
 def add_user():
-    if request.method == 'POST':
-        username = request.form['user']
-        password = request.form['password']
-        shell = request.form['shell']
-        sudo_access = request.form['sudo']
-        home_dir = request.form['home']
-        if sudo_access == "yes":
-            cmd = "adduser -d " +  home_dir +  " -p " + password  + " -s " + shell + " -G wheel "+ username
-            print cmd
-            cmd_output = subprocess.check_output(cmd, shell=True)
-            return cmd_output
-        else:
-            print "adduser -d " +  home_dir +  " -p " + password  + " -s " + shell + " " + username
+    try:
+        if request.method == 'POST':
+            username = request.form['user']
+            password = request.form['password']
+            crypted_password = crypt_password(password)
+            print crypted_password
+            shell = request.form['shell']
+            sudo_access = request.form['sudo']
+            home_dir = request.form['home']
+            if sudo_access == "yes":
+                cmd = "adduser -d " +  home_dir +  " -p " + crypted_password  + " -s " + shell + " -G wheel "+ username
+                cmd_output = subprocess.check_output(cmd, shell=True)
+                # return cmd_output
+            else:
+                print "adduser -d " +  home_dir +  " -p " + crypted_password  + " -s " + shell + " " + username
 
-        # os.system("sudo useradd " +username)
-        return "user successfully created."
+            # os.system("sudo useradd " +username)
+            return cmd_output
+            # return "user successfully created."
+    except:
+        return "Something went wrong user not created!!!!!"
     return render_template('add.html')
 
 
@@ -54,4 +74,4 @@ def advanced_access():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
