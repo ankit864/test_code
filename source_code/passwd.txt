@@ -1,0 +1,6 @@
+root:!:0:0::/:/usr/bin/ksh
+daemon:!:1:1::/etc:
+bin:!:2:2::/bin:
+sys:!:3:3::/usr/sys:
+adm:!:4:4::/var/adm:
+uucp:!:5:5::/usr/lib/uucp:
