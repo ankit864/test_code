@@ -37,13 +37,10 @@ def add_user():
             if sudo_access == "yes":
                 cmd = "adduser -d " +  home_dir +  " -p " + crypted_password  + " -s " + shell + " -G wheel "+ username
                 cmd_output = subprocess.check_output(cmd, shell=True)
-                # return cmd_output
             else:
-                print "adduser -d " +  home_dir +  " -p " + crypted_password  + " -s " + shell + " " + username
-
-            # os.system("sudo useradd " +username)
-            return cmd_output
-            # return "user successfully created."
+                cmd "adduser -d " +  home_dir +  " -p " + crypted_password  + " -s " + shell + " " + username
+                cmd_output = subprocess.check_output(cmd, shell=True)
+            return "user successfully created."
     except:
         return "Something went wrong user not created!!!!!"
     return render_template('add.html')
@@ -53,8 +50,9 @@ def add_user():
 def delete_user():
     if request.method == 'POST':
         username = request.form['user']
-        os.system("sudo userdel " +username)
-        return redirect(url_for('index'))
+        cmd = "userdel" + username
+        check_output = subprocess.check_output(cmd, shell=True)
+        return "user deleted successfully"
     return render_template('delete.html')
 
 @app.route('/modify', methods=['GET', 'POST'])
