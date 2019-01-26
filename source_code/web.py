@@ -18,8 +18,9 @@ def add_user():
         home_dir = request.form['home']
         if sudo_access == "yes":
             cmd = "adduser -d " +  home_dir +  " -p " + password  + " -s " + shell + " -G wheel "+ username
-            returned_output = subprocess.check_output(cmd)
-            print returned_output
+            print cmd
+            cmd_output = subprocess.check_output(cmd, shell=True)
+            return cmd_output
         else:
             print "adduser -d " +  home_dir +  " -p " + password  + " -s " + shell + " " + username
 
