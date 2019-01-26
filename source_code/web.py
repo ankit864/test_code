@@ -27,7 +27,7 @@ def home_dir_create(username,home_dir):
     command_exec(create_dir)
     copy_skel = "cp -rT /etc/skel " + home_dir
     command_exec(copy_skel)
-    own_dir = "chown -R " + username + ":" + username + home_dir
+    own_dir = "chown -R " + username + ":" + username + " "+ home_dir
     command_exec(own_dir)
 
 @app.route('/')
