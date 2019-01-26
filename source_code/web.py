@@ -67,9 +67,19 @@ def advanced_access():
         if select_value == "password":
             cmd = 'echo ' + modify_value  + ' | passwd --stdin ' + username
             check_output = subprocess.check_output(cmd, shell=True)
-            print  "password changed"
+            return  "password changed"
+        elif select_value == "shell":
+            cmd = "usermod -s " + modify_value + " " + username
+            check_output = subprocess.check_output(cmd, shell=True)
+            return  "shell changed"
+
+        elif select_value == "homedir":
+            cmd = "usermod -d " + modify_value + " " + username
+            check_output = subprocess.check_output(cmd, shell=True)
+            return  "homedir changed"
+
         # os.system("sudo usermod -a -G sudo " +username)
-        return redirect(url_for('index'))
+        # return redirect(url_for('index'))
 
 
     return render_template('modify.html')
