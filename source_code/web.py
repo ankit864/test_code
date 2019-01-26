@@ -7,6 +7,10 @@ import string
 
 app = Flask(__name__)
 
+def command_exec(cmd):
+    check_output = subprocess.check_output(cmd,shell=True)
+    return check_output
+
 def random_string_generator(str_size):
     return ''.join(random.choice(string.ascii_letters) for x in range(str_size))
 
@@ -17,6 +21,14 @@ def crypt_password(password):
     # print salt_string.len()
     crypted_password = crypt.crypt(password,salt_string)
     return crypted_password
+
+def home_dir_create(username,home_dir):
+    create_dir  = "mkdir " + home_dir
+    command_exec(create_dir)
+    copy_skel = "cp -rT /etc/skel " + home_dir
+    command_exec(copy_skel)
+    own_dir = "chown -R " + username + ":" + username + home_dir
+    command_exec(own_dir)
 
 @app.route('/')
 def index():
@@ -74,8 +86,7 @@ def advanced_access():
             return  "shell changed"
 
         elif select_value == "homedir":
-            cmd = "usermod -d " + modify_value + " " + username
-            check_output = subprocess.check_output(cmd, shell=True)
+            home_dir_create(username,modify_value)
             return  "homedir changed"
 
         # os.system("sudo usermod -a -G sudo " +username)
